@@ -37,26 +37,44 @@ export default class Selection {
     return equalTo;
   }
 
-  static fromNothing() {
+  static fromNothing(Class) {
+    if (Class === undefined) {
+      Class = Selection;
+    }
+
     const startPosition = 0,
           endPosition = 0,
-          selection = new Selection(startPosition, endPosition);
+          selection = new Class(startPosition, endPosition);
 
     return selection;
   }
 
-  static fromDOMElement(domElement) {
+  static fromDOMElement(Class, domElement) {
+    if (domElement === undefined) {
+      domElement = Class; ///
+
+      Class = Selection;
+    }
+
     const { selectionStart, selectionEnd } = domElement,
           startPosition = selectionStart, ///
           endPosition = selectionEnd, ///
-          selection = new Selection(startPosition, endPosition);
+          selection = new Class(startPosition, endPosition);
 
     return selection;
 
   }
 
-  static fromStartPositionAndEndPosition(startPosition, endPosition) {
-    const selection = new Selection(startPosition, endPosition);
+  static fromStartPositionAndEndPosition(Class, startPosition, endPosition) {
+    if (endPosition === undefined) {
+      startPosition = Class;  ///
+
+      endPosition = startPosition;  ///
+
+      Class = Selection;
+    }
+
+    const selection = new Class(startPosition, endPosition);
 
     return selection;
   }
