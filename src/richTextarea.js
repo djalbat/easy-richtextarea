@@ -13,27 +13,11 @@ const { BLUR_EVENT_TYPE,
         SELECTIONCHANGE_EVENT_TYPE } = eventTypes;
 
 export default class RichTextarea extends Element {
-  constructor(selector, focused) {
-    super(selector);
-
-    this.focused = focused;
-  }
-
-  isFocused() {
-    return this.focused;
-  }
-
-  setFocused(focused) {
-    this.focused = focused;
-  }
-
   inputHandler = (event, element) => {
     this.intermediateHandler(event, element);
   }
 
   blurHandler = (event, element) => {
-    this.focused = false;
-
     const eventType = BLUR_EVENT_TYPE,
           selectionChanged = true;
 
@@ -41,8 +25,6 @@ export default class RichTextarea extends Element {
   }
 
   focusHandler = (event, element) => {
-    this.focused = true;
-
     defer(() => {
       const eventType = FOCUS_EVENT_TYPE,
             selectionChanged = true;
@@ -62,7 +44,11 @@ export default class RichTextarea extends Element {
   }
 
   selectChangeHandler = (event, element) => {
-    if (this.focused) {
+    const { currentTarget } = event,
+          { activeElement } = currentTarget,
+          domElement = this.getDOMElement();
+
+    if (activeElement === domElement) {
       element = this; ///
 
       this.intermediateHandler(event, element);
@@ -322,8 +308,7 @@ export default class RichTextarea extends Element {
   };
 
   static fromClass(Class, properties, ...remainingArguments) {
-    const focused = false,
-          richTextarea = Element.fromClass(Class, properties, focused, ...remainingArguments);
+    const richTextarea = Element.fromClass(Class, properties, ...remainingArguments);
 
     return richTextarea;
   }
