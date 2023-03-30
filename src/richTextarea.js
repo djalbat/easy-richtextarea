@@ -95,6 +95,13 @@ export default class RichTextarea extends Element {
     });
   }
 
+  isReadOnly() {
+    const domElement = this.getDOMElement(),
+          { readOnly } = domElement;
+
+    return readOnly;
+  }
+
   isActive() {
     const active = this.hasClass("active");
 
@@ -144,6 +151,14 @@ export default class RichTextarea extends Element {
           selectionChanged = !selectionPreviousSelection; ///
 
     return selectionChanged;
+  }
+
+  setReadOnly(readOnly) {
+    const domElement = this.getDOMElement();
+
+    Object.assign(domElement, {
+      readOnly
+    });
   }
 
   setContent(content, setPreviousContent = true) {
