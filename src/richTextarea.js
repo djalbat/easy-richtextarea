@@ -10,11 +10,6 @@ const { BLUR_EVENT_TYPE,
         INPUT_EVENT_TYPE,
         SCROLL_EVENT_TYPE,
         CHANGE_EVENT_TYPE,
-        CUT_EVENT_TYPE,
-        COPY_EVENT_TYPE,
-        PASTE_EVENT_TYPE,
-        KEYDOWN_EVENT_TYPE,
-        MOUSEDOWN_EVENT_TYPE,
         SELECTIONCHANGE_EVENT_TYPE } = eventTypes;
 
 export default class RichTextarea extends Element {
@@ -42,26 +37,6 @@ export default class RichTextarea extends Element {
     const eventType = SCROLL_EVENT_TYPE;
 
     this.callHandlers(eventType, event, element);
-  }
-
-  cutHandler = (event, element) => {
-    ///
-  }
-
-  copyHandler = (event, element) => {
-    ///
-  }
-
-  pasteHandler = (event, element) => {
-    ///
-  }
-
-  keyDownHandler = (event, element) => {
-    ///
-  }
-
-  mouseDownHandler = (event, element) => {
-    ///
   }
 
   selectChangeHandler = (event, element) => {
@@ -105,11 +80,6 @@ export default class RichTextarea extends Element {
         && (handler !== this.focusHandler)
         && (handler !== this.inputHandler)
         && (handler !== this.scrollHandler)
-        && (handler !== this.cutHandler)
-        && (handler !== this.copyHandler)
-        && (handler !== this.pasteHandler)
-        && (handler !== this.keyDownHandler)
-        && (handler !== this.mouseDownHandler)
         && (handler !== this.selectChangeHandler) ) {
 
         const handlerElement = element; ///
@@ -147,18 +117,6 @@ export default class RichTextarea extends Element {
           selection = Selection.fromDOMElement(domElement);
 
     return selection;
-  }
-
-  getSelectedContent() {
-    const content = this.getContent(),
-          selection = this.getSelection(),
-          endPosition = selection.getEndPosition(),
-          startPosition = selection.getStartPosition(),
-          start = startPosition,  ///
-          end = endPosition,  ///
-          selectedContent = content.slice(start, end);
-
-    return selectedContent;
   }
 
   hasContentChanged() {
@@ -227,16 +185,6 @@ export default class RichTextarea extends Element {
 
     this.on(SCROLL_EVENT_TYPE, this.scrollHandler);
 
-    this.on(CUT_EVENT_TYPE, this.cutHandler);
-
-    this.on(COPY_EVENT_TYPE, this.copyHandler);
-
-    this.on(PASTE_EVENT_TYPE, this.pasteHandler);
-
-    this.on(KEYDOWN_EVENT_TYPE, this.keyDownHandler);
-
-    this.on(MOUSEDOWN_EVENT_TYPE, this.mouseDownHandler);
-
     document.on(SELECTIONCHANGE_EVENT_TYPE, this.selectChangeHandler);
 
     this.addClass("active");
@@ -250,16 +198,6 @@ export default class RichTextarea extends Element {
     this.off(INPUT_EVENT_TYPE, this.inputHandler);
 
     this.off(SCROLL_EVENT_TYPE, this.scrollHandler);
-
-    this.off(CUT_EVENT_TYPE, this.cutHandler);
-
-    this.off(COPY_EVENT_TYPE, this.copyHandler);
-
-    this.off(PASTE_EVENT_TYPE, this.pasteHandler);
-
-    this.off(KEYDOWN_EVENT_TYPE, this.keyDownHandler);
-
-    this.off(MOUSEDOWN_EVENT_TYPE, this.mouseDownHandler);
 
     document.off(SELECTIONCHANGE_EVENT_TYPE, this.selectChangeHandler);
 
@@ -291,13 +229,20 @@ export default class RichTextarea extends Element {
   }
 
   didMount() {
+    const content = this.getContent(),
+          selection = this.getSelection(),
+          previousContent = content,  ///
+          previousSelection = selection;  ///
+
+    this.setPreviousContent(previousContent);
+
+    this.setPreviousSelection(previousSelection);
+
     const { onBlur, onFocus, onScroll, onChange } = this.properties,
           blurHandler = onBlur, ///
           focusHandler = onFocus, ///
           scrollHandler = onScroll, ///
           changeHandler = onChange; ///
-
-    this.updateInitialState();
 
     blurHandler && this.onBlur(blurHandler, this);
 
@@ -328,17 +273,6 @@ export default class RichTextarea extends Element {
     if (active) {
       this.deactivate();
     }
-  }
-
-  updateInitialState() {
-    const content = this.getContent(),
-          selection = this.getSelection(),
-          previousContent = content,  ///
-          previousSelection = selection;  ///
-
-    this.setPreviousContent(previousContent);
-
-    this.setPreviousSelection(previousSelection);
   }
 
   setInitialState() {
