@@ -5,7 +5,10 @@ import RichTextarea from "./richTextarea";
 const content = "",
       richTextarea =
 
-        <RichTextarea onBlur={blurHandler} onFocus={focusHandler} onChange={changeHandler} onScroll={scrollHandler} />
+        <RichTextarea onCustomBlur={customBlurHandler}
+                      onCustomFocus={customFocusHandler}
+                      onCustomScroll={customScrollHandler}
+                      onCustomChange={customChangeHandler} />
 
       ;
 
@@ -23,24 +26,24 @@ const View = (properties) =>
 
 export default View;
 
-function blurHandler(event, element) {
+function customBlurHandler(event, element) {
   console.log("blur")
 }
 
-function focusHandler(event, element) {
+function customFocusHandler(event, element) {
   console.log("focus")
 }
 
-function changeHandler(event, element) {
-  const contentChanged = richTextarea.hasContentChanged(),
-        selectionChanged = richTextarea.hasSelectionChanged();
-
-  console.log(contentChanged, selectionChanged)
-}
-
-function scrollHandler(event, element) {
+function customScrollHandler(event, element) {
   const scrollTop = richTextarea.getScrollTop(),
         scrollLeft = richTextarea.getScrollLeft();
 
   console.log(scrollTop, scrollLeft)
+}
+
+function customChangeHandler(event, element) {
+  const contentChanged = richTextarea.hasContentChanged(),
+        selectionChanged = richTextarea.hasSelectionChanged();
+
+  console.log(contentChanged, selectionChanged)
 }

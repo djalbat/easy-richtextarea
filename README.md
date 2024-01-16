@@ -57,33 +57,33 @@ import { RichTextarea } from "easy-richtextarea";
 
 const richTextarea =
 
-        <RichTextarea onChange={changeHandler}
-                      onScroll={scrollHandler}
-                      onFocus={focusHandler}
-                      onBlur={blurHandler}
+        <RichTextarea onCustomChange={changeCustomHandler}
+                      onCustomScroll={scrollCUstomHandler}
+                      onCustomFocus={focusCustomHandler}
+                      onCustomBlur={blurCustomHandler}
         />
 
       ;
 
-function changeHandler(event, element) {
+function changeCustomHandler(event, element) {
   const contentChanged = element.hasContentChanged(),
         selectionChanged = element.hasSelectionChanged();
 
   console.log(contentChanged, selectionChanged)
 }
 
-function scrollHandler(event, element) {
+function scrollCUstomHandler(event, element) {
   const scrollTop = element.getScrollTop(),
         scrollLeft = element.getScrollLeft();
 
   console.log(scrollTop, scrollLeft)
 }
 
-function focusHandler(event, element) {
+function focusCustomHandler(event, element) {
   console.log("focus")
 }
 
-function blurHandler(event, element) {
+function blurCustomHandler(event, element) {
   console.log("blur")
 }
 ```
