@@ -18,7 +18,7 @@ export default class RichTextarea extends Element {
     const customEventType = BLUR_CUSTOM_EVENT_TYPE,
           selectionChanged = true;
 
-    this.customEventHandler(event, element, customEventType, selectionChanged);
+    this.customHandler(event, element, customEventType, selectionChanged);
   }
 
   focusHandler = (event, element) => {
@@ -26,7 +26,7 @@ export default class RichTextarea extends Element {
       const customEventType = FOCUS_CUSTOM_EVENT_TYPE,
             selectionChanged = true;
 
-      this.customEventHandler(event, element, customEventType, selectionChanged);
+      this.customHandler(event, element, customEventType, selectionChanged);
     });
   }
 
@@ -34,7 +34,7 @@ export default class RichTextarea extends Element {
     const customEventType = CHANGE_CUSTOM_EVENT_TYPE,
           selectionChanged = this.hasSelectionChanged();
 
-    this.customEventHandler(event, element, customEventType, selectionChanged);
+    this.customHandler(event, element, customEventType, selectionChanged);
   }
 
   scrollHandler = (event, element) => {
@@ -54,11 +54,11 @@ export default class RichTextarea extends Element {
       const customEventType = CHANGE_CUSTOM_EVENT_TYPE,
             selectionChanged = this.hasSelectionChanged();
 
-      this.customEventHandler(event, element, customEventType, selectionChanged);
+      this.customHandler(event, element, customEventType, selectionChanged);
     }
   }
 
-  customEventHandler = (event, element, customEventType, selectionChanged) => {
+  customHandler = (event, element, customEventType, selectionChanged) => {
     const content = this.getContent(),
           selection = this.getSelection(),
           contentChanged = this.hasContentChanged();
