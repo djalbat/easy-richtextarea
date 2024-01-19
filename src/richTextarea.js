@@ -40,7 +40,7 @@ export default class RichTextarea extends Element {
   scrollHandler = (event, element) => {
     const customEventType = SCROLL_CUSTOM_EVENT_TYPE;
 
-    this.callCustomHandlers(customEventType, event, element); ///
+    this.callCustomHandlers(customEventType, event);
   }
 
   selectChangeHandler = (event, element) => {
@@ -64,7 +64,7 @@ export default class RichTextarea extends Element {
           contentChanged = this.hasContentChanged();
 
     if (contentChanged || selectionChanged) {
-      this.callCustomHandlers(customEventType, event, element);
+      this.callCustomHandlers(customEventType, event);
     }
 
     const previousContent = content,  ///
