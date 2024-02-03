@@ -1,9 +1,9 @@
 "use strict";
 
-export const BLUR_CUSTOM_EVENT_TYPE = "blur-custom";
-export const FOCUS_CUSTOM_EVENT_TYPE = "focus-custom";
-export const SCROLL_CUSTOM_EVENT_TYPE = "scroll-custom";
-export const CHANGE_CUSTOM_EVENT_TYPE = "change-custom";
+export const BLUR_CUSTOM_EVENT_TYPE = "blur";
+export const FOCUS_CUSTOM_EVENT_TYPE = "focus";
+export const SCROLL_CUSTOM_EVENT_TYPE = "scroll";
+export const CHANGE_CUSTOM_EVENT_TYPE = "change";
 
 export default {
   BLUR_CUSTOM_EVENT_TYPE,
