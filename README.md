@@ -1,4 +1,4 @@
-# Easy Rich Textarea
+# Easy RichTextarea
 
 A textarea element that handles and hands off events well.
 
@@ -15,18 +15,18 @@ There is now support for JSX in the form of [Juxtapose](https://github.com/djalb
 - [Easy Mobile](https://github.com/djalbat/easy-mobile) Touch gestures for mobile web applications.
 - [Easy Navigation](https://github.com/djalbat/easy-navigation) A responsive accordion and associated navigation.
 - [Easy File System](https://github.com/djalbat/easy-file-system) A file system explorer and a rubbish bin.
-- [Easy Rich Textarea](https://github.com/djalbat/easy-rich-textarea) A textarea element that handles and hands off events well.
+- [Easy RichTextarea](https://github.com/djalbat/easy-richtextarea) A textarea element that handles and hands off events well.
 - [Easy Drag and Drop](https://github.com/djalbat/easy-drag-and-drop) Drag and drop functionality for Easy elements.
 
 ## Installation
 
 You can install Easy RichTextarea with [npm](https://www.npmjs.com/):
 
-    npm install easy-rich-textarea
+    npm install easy-richtextarea
 
 You can also clone the repository with [Git](https://git-scm.com/)...
 
-    git clone https://github.com/djalbat/easy-rich-textarea.git
+    git clone https://github.com/djalbat/easy-richtextarea.git
 
 ...and then install the dependencies with npm from within the project's root directory:
 
@@ -55,7 +55,7 @@ One last thing to bear in mind is that this package is included by way of a rela
 The `RichTextarea` element is typically created with several handlers:
 
 ```
-import { RichTextarea } from "easy-rich-textarea";
+import { RichTextarea } from "easy-richtextarea";
 
 const richTextarea =
 
