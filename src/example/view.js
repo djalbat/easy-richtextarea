@@ -1,49 +1,82 @@
 "use strict";
 
-import RichTextarea from "./richTextarea";
+import { Element } from "easy";
+import { arrayUtilities } from "necessary";
 
-const content = "",
-      richTextarea =
+import Button from "./view/button";
+import RichTextarea from "./view/richTextarea";
 
-        <RichTextarea onCustomBlur={customBlurHandler}
-                      onCustomFocus={customFocusHandler}
-                      onCustomScroll={customScrollHandler}
-                      onCustomChange={customChangeHandler} />
+const { second } = arrayUtilities;
 
-      ;
+let count = 0;
 
-richTextarea.setContent(content);
+export default class View extends Element {
+  buttonClickHandler = (event, element) => {
+    const richTextarea = this.getRickTextarea();
 
-richTextarea.activate();
+    richTextarea.activate();
+  }
 
-const View = (properties) =>
+  blurCustomHandler = (event, element) => {
+    console.log(count++, "blur")
+  }
 
-  <div className="view">
-    {richTextarea}
-  </div>
+  focusCustomHandler = (event, element) => {
+    console.log(count++, "focus")
+  }
 
-;
+  scrollCustomHandler = (event, element) => {
+    const richTextarea = this.getRickTextarea(),
+          scrollTop = richTextarea.getScrollTop(),
+          scrollLeft = richTextarea.getScrollLeft();
 
-export default View;
+    console.log(count++, "scroll", scrollTop, scrollLeft)
+  }
 
-function customBlurHandler(event, element) {
-  console.log("blur")
-}
+  changeCustomHandler = (event, element) => {
+    const richTextarea = this.getRickTextarea(),
+          contentChanged = richTextarea.hasContentChanged(),
+          selectionChanged = richTextarea.hasSelectionChanged();
 
-function customFocusHandler(event, element) {
-  console.log("focus")
-}
+    console.log(count++, "change", contentChanged, selectionChanged)
+  }
 
-function customScrollHandler(event, element) {
-  const scrollTop = richTextarea.getScrollTop(),
-        scrollLeft = richTextarea.getScrollLeft();
+  activateCustomHandler = (event, element) => {
+    console.log(count++, "activate")
+  }
 
-  console.log(scrollTop, scrollLeft)
-}
+  deactivateCustomHandler = (event, element) => {
+    console.log(count++, "deactivate")
+  }
 
-function customChangeHandler(event, element) {
-  const contentChanged = richTextarea.hasContentChanged(),
-        selectionChanged = richTextarea.hasSelectionChanged();
+  getRickTextarea() {
+    const childElements = this.getChildElements(),
+          secondChildElement = second(childElements),
+          richTextarea = secondChildElement;  ///
 
-  console.log(contentChanged, selectionChanged)
+    return richTextarea;
+  }
+
+  childElements() {
+    return ([
+
+      <Button onClick={this.buttonClickHandler}>
+        Activate
+      </Button>,
+      <RichTextarea onCustomBlur={this.blurCustomHandler}
+                    onCustomFocus={this.focusCustomHandler}
+                    onCustomScroll={this.scrollCustomHandler}
+                    onCustomChange={this.changeCustomHandler}
+                    onCustomActivate={this.activateCustomHandler}
+                    onCustomDeactivate={this.deactivateCustomHandler}
+      />
+
+    ]);
+  }
+
+  static tagName = "div";
+
+  static defaultProperties = {
+    className: "view"
+  }
 }

@@ -5,65 +5,105 @@ import { Element, document, eventTypes } from "easy";
 import Selection from "./selection"
 import customEventMixins from "./mixins/customEvent";
 
-import { BLUR_CUSTOM_EVENT_TYPE, FOCUS_CUSTOM_EVENT_TYPE, SCROLL_CUSTOM_EVENT_TYPE, CHANGE_CUSTOM_EVENT_TYPE } from "./customEventTypes";
+import { BLUR_CUSTOM_EVENT_TYPE,
+         FOCUS_CUSTOM_EVENT_TYPE,
+         SCROLL_CUSTOM_EVENT_TYPE,
+         CHANGE_CUSTOM_EVENT_TYPE,
+         ACTIVATE_CUSTOM_EVENT_TYPE,
+         DEACTIVATE_CUSTOM_EVENT_TYPE } from "./customEventTypes";
 
-const { BLUR_EVENT_TYPE,
-        FOCUS_EVENT_TYPE,
-        INPUT_EVENT_TYPE,
-        SCROLL_EVENT_TYPE,
-        SELECTIONCHANGE_EVENT_TYPE } = eventTypes;
+const { BLUR_EVENT_TYPE, FOCUS_EVENT_TYPE, INPUT_EVENT_TYPE, SCROLL_EVENT_TYPE } = eventTypes;
 
 export default class RichTextarea extends Element {
   blurHandler = (event, element) => {
-    const customEventType = BLUR_CUSTOM_EVENT_TYPE,
-          selectionChanged = true;
+    const active = this.isActive();
 
-    this.customHandler(customEventType, event, element, selectionChanged);
+    if (!active) {
+      return;
+    }
+
+    const customEventType = BLUR_CUSTOM_EVENT_TYPE,
+          forced = true;
+
+    this.customHandler(customEventType, event, element, forced);
   }
 
   focusHandler = (event, element) => {
     defer(() => {
-      const customEventType = FOCUS_CUSTOM_EVENT_TYPE,
-            selectionChanged = true;
+      const active = this.isActive();
 
-      this.customHandler(customEventType, event, element, selectionChanged);
+      if (!active) {
+        this.addClass("active");
+
+        const customEventType = ACTIVATE_CUSTOM_EVENT_TYPE,
+              event = null,
+              element = this,
+              forced = true;
+
+        this.customHandler(customEventType, event, element, forced);
+      }
+
+      const customEventType = FOCUS_CUSTOM_EVENT_TYPE,
+            forced = true;
+
+      this.customHandler(customEventType, event, element, forced);
     });
   }
 
   inputHandler = (event, element) => {
-    const customEventType = CHANGE_CUSTOM_EVENT_TYPE,
-          selectionChanged = this.hasSelectionChanged();
+    const active = this.isActive();
 
-    this.customHandler(customEventType, event, element, selectionChanged);
+    if (!active) {
+      return;
+    }
+
+    const customEventType = CHANGE_CUSTOM_EVENT_TYPE;
+
+    this.customHandler(customEventType, event, element);
   }
 
   scrollHandler = (event, element) => {
-    const customEventType = SCROLL_CUSTOM_EVENT_TYPE;
+    const active = this.isActive();
 
-    this.callCustomHandlers(customEventType, event, element);
+    if (!active) {
+      return;
+    }
+
+    const customEventType = SCROLL_CUSTOM_EVENT_TYPE,
+          forced = true;
+
+    this.customHandler(customEventType, event, element, forced);
   }
 
-  selectChangeHandler = (event, element) => {
+  selectionChangeHandler = (event, element) => {
+    const active = this.isActive();
+
+    if (!active) {
+      return;
+    }
+
     const { currentTarget } = event,
           { activeElement } = currentTarget,
           domElement = this.getDOMElement();
 
-    if (activeElement === domElement) {
-      element = this; ///
-
-      const customEventType = CHANGE_CUSTOM_EVENT_TYPE,
-            selectionChanged = this.hasSelectionChanged();
-
-      this.customHandler(customEventType, event, element, selectionChanged);
+    if (activeElement !== domElement) {
+      return;
     }
+
+    element = this; ///
+
+    const customEventType = CHANGE_CUSTOM_EVENT_TYPE;
+
+    this.customHandler(customEventType, event, element);
   }
 
-  customHandler = (customEventType, event, element, selectionChanged) => {
+  customHandler = (customEventType, event, element, forced = false) => {
     const content = this.getContent(),
           selection = this.getSelection(),
-          contentChanged = this.hasContentChanged();
+          contentChanged = this.hasContentChanged(),
+          selectionChanged = this.hasSelectionChanged();
 
-    if (contentChanged || selectionChanged) {
+    if (forced || contentChanged || selectionChanged) {
       this.callCustomHandlers(customEventType, event, element);
     }
 
@@ -161,31 +201,30 @@ export default class RichTextarea extends Element {
   }
 
   activate() {
-    this.onEvent(BLUR_EVENT_TYPE, this.blurHandler);
+    const active = this.isActive();
 
-    this.onEvent(FOCUS_EVENT_TYPE, this.focusHandler);
+    if (active) {
+      return;
+    }
 
-    this.onEvent(INPUT_EVENT_TYPE, this.inputHandler);
-
-    this.onEvent(SCROLL_EVENT_TYPE, this.scrollHandler);
-
-    document.onEvent(SELECTIONCHANGE_EVENT_TYPE, this.selectChangeHandler);
-
-    this.addClass("active");
+    this.focus();
   }
 
   deactivate() {
-    this.offEvent(BLUR_EVENT_TYPE, this.blurHandler);
+    const active = this.isActive();
 
-    this.offEvent(FOCUS_EVENT_TYPE, this.focusHandler);
-
-    this.offEvent(INPUT_EVENT_TYPE, this.inputHandler);
-
-    this.offEvent(SCROLL_EVENT_TYPE, this.scrollHandler);
-
-    document.offEvent(SELECTIONCHANGE_EVENT_TYPE, this.selectChangeHandler);
+    if (!active) {
+      return;
+    }
 
     this.removeClass("active");
+
+    const customEventType = DEACTIVATE_CUSTOM_EVENT_TYPE,
+          event = null,
+          element = this,
+          forced = true;
+
+    this.customHandler(customEventType, event, element, forced);
   }
 
   getPreviousContent() {
@@ -212,6 +251,16 @@ export default class RichTextarea extends Element {
     });
   }
 
+  setInitialState() {
+    const previousContent = null,
+          previousSelection = null;
+
+    this.setState({
+      previousContent,
+      previousSelection
+    });
+  }
+
   didMount() {
     const content = this.getContent(),
           selection = this.getSelection(),
@@ -221,24 +270,28 @@ export default class RichTextarea extends Element {
     this.setPreviousContent(previousContent);
 
     this.setPreviousSelection(previousSelection);
+
+    this.onEvent(BLUR_EVENT_TYPE, this.blurHandler);
+
+    this.onEvent(FOCUS_EVENT_TYPE, this.focusHandler);
+
+    this.onEvent(INPUT_EVENT_TYPE, this.inputHandler);
+
+    this.onEvent(SCROLL_EVENT_TYPE, this.scrollHandler);
+
+    document.onSelectionChange(this.selectionChangeHandler, this);
   }
 
   willUnmount() {
-    const active = this.isActive();
+    this.offEvent(BLUR_EVENT_TYPE, this.blurHandler);
 
-    if (active) {
-      this.deactivate();
-    }
-  }
+    this.offEvent(FOCUS_EVENT_TYPE, this.focusHandler);
 
-  setInitialState() {
-    const previousContent = null,
-          previousSelection = null;
+    this.offEvent(INPUT_EVENT_TYPE, this.inputHandler);
 
-    this.setState({
-      previousContent,
-      previousSelection
-    });
+    this.offEvent(SCROLL_EVENT_TYPE, this.scrollHandler);
+
+    document.offSelectionChange(this.selectionChangeHandler, this);
   }
 
   initialise() {

@@ -2,7 +2,14 @@
 
 A textarea element that handles and hands off events well.
 
-This element enshrines the concept of being active, that is hogging the user input. This means that several event handlers are registered to handle user input events when the element is activated. These handlers are then unregistered when the element is deactivated. Using it will take some of the headache out of having multiple textareas in one application because only the active rich textarea will invoke its handlers. It also provides better event handling. For example, the change handler will be invoked whenever the content or selection changes, no matter how often, rather then just, say, when the focus is lost.
+In the DOM API the active element is the one that has the focus.
+That concept is twisted here somewhat.
+A rich textarea is active if it has the focus but can remain active when it loses it.
+Rich textareas are made for sitting behind a pretty printer that is still shown even when the focus is lost.
+Scroll events still need to be handled, for example.
+
+As well as a different concept of being active, rich textareas also have an improved change event mechanism that results in custom change events being fired not just whenever the content changes but when the selection changes to.
+Again this makes them more suitable for sitting behind a pretty printer.
 
 ### JSX support
 
