@@ -78,7 +78,7 @@ export default class RichTextarea extends Element {
       }
 
       const customEventType = FOCUS_CUSTOM_EVENT_TYPE,
-        forced = true;
+            forced = true;
 
       this.customHandler(customEventType, event, element, forced);
     });
