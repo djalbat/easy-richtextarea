@@ -67,12 +67,12 @@ export default class RichTextarea extends Element {
       const active = this.isActive();
 
       if (!active) {
-        this.addClass("active");
-
         const customEventType = ACTIVATE_CUSTOM_EVENT_TYPE,
               event = null,
               element = this,
               forced = true;
+
+        this.addClass("active");
 
         this.customHandler(customEventType, event, element, forced);
       }
@@ -217,12 +217,12 @@ export default class RichTextarea extends Element {
       return;
     }
 
-    this.removeClass("active");
-
     const customEventType = DEACTIVATE_CUSTOM_EVENT_TYPE,
           event = null,
           element = this,
           forced = true;
+
+    this.removeClass("active");
 
     this.customHandler(customEventType, event, element, forced);
   }
