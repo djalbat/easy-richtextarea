@@ -15,66 +15,6 @@ import { BLUR_CUSTOM_EVENT_TYPE,
 const { BLUR_EVENT_TYPE, FOCUS_EVENT_TYPE, INPUT_EVENT_TYPE, SCROLL_EVENT_TYPE } = eventTypes;
 
 export default class RichTextarea extends Element {
-  blurHandler = (event, element) => {
-    const active = this.isActive();
-
-    if (!active) {
-      return;
-    }
-
-    const customEventType = BLUR_CUSTOM_EVENT_TYPE,
-          forced = true;
-
-    this.customHandler(customEventType, event, element, forced);
-  }
-
-  focusHandler = (event, element) => {
-    defer(() => {
-      const active = this.isActive();
-
-      if (!active) {
-        this.addClass("active");
-
-        const customEventType = ACTIVATE_CUSTOM_EVENT_TYPE,
-              event = null,
-              element = this,
-              forced = true;
-
-        this.customHandler(customEventType, event, element, forced);
-      }
-
-      const customEventType = FOCUS_CUSTOM_EVENT_TYPE,
-            forced = true;
-
-      this.customHandler(customEventType, event, element, forced);
-    });
-  }
-
-  inputHandler = (event, element) => {
-    const active = this.isActive();
-
-    if (!active) {
-      return;
-    }
-
-    const customEventType = CHANGE_CUSTOM_EVENT_TYPE;
-
-    this.customHandler(customEventType, event, element);
-  }
-
-  scrollHandler = (event, element) => {
-    const active = this.isActive();
-
-    if (!active) {
-      return;
-    }
-
-    const customEventType = SCROLL_CUSTOM_EVENT_TYPE,
-          forced = true;
-
-    this.customHandler(customEventType, event, element, forced);
-  }
-
   selectionChangeHandler = (event, element) => {
     const active = this.isActive();
 
@@ -95,6 +35,66 @@ export default class RichTextarea extends Element {
     const customEventType = CHANGE_CUSTOM_EVENT_TYPE;
 
     this.customHandler(customEventType, event, element);
+  }
+
+  scrollHandler = (event, element) => {
+    const active = this.isActive();
+
+    if (!active) {
+      return;
+    }
+
+    const customEventType = SCROLL_CUSTOM_EVENT_TYPE,
+          forced = true;
+
+    this.customHandler(customEventType, event, element, forced);
+  }
+
+  inputHandler = (event, element) => {
+    const active = this.isActive();
+
+    if (!active) {
+      return;
+    }
+
+    const customEventType = CHANGE_CUSTOM_EVENT_TYPE;
+
+    this.customHandler(customEventType, event, element);
+  }
+
+  focusHandler = (event, element) => {
+    defer(() => {
+      const active = this.isActive();
+
+      if (!active) {
+        this.addClass("active");
+
+        const customEventType = ACTIVATE_CUSTOM_EVENT_TYPE,
+              event = null,
+              element = this,
+              forced = true;
+
+        this.customHandler(customEventType, event, element, forced);
+      }
+
+      const customEventType = FOCUS_CUSTOM_EVENT_TYPE,
+        forced = true;
+
+      this.customHandler(customEventType, event, element, forced);
+    });
+  }
+
+  blurHandler = (event, element) => {
+    const active = this.isActive();
+
+    if (!active) {
+      return;
+    }
+
+    const customEventType = BLUR_CUSTOM_EVENT_TYPE,
+          forced = true;
+
+    this.customHandler(customEventType, event, element, forced);
   }
 
   customHandler = (customEventType, event, element, forced = false) => {
