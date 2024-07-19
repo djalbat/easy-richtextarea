@@ -8,9 +8,7 @@ import customEventMixins from "./mixins/customEvent";
 import { BLUR_CUSTOM_EVENT_TYPE,
          FOCUS_CUSTOM_EVENT_TYPE,
          SCROLL_CUSTOM_EVENT_TYPE,
-         CHANGE_CUSTOM_EVENT_TYPE,
-         ACTIVATE_CUSTOM_EVENT_TYPE,
-         DEACTIVATE_CUSTOM_EVENT_TYPE } from "./customEventTypes";
+         CHANGE_CUSTOM_EVENT_TYPE } from "./customEventTypes";
 
 const { BLUR_EVENT_TYPE, FOCUS_EVENT_TYPE, INPUT_EVENT_TYPE, SCROLL_EVENT_TYPE } = eventTypes;
 
@@ -67,14 +65,7 @@ export default class RichTextarea extends Element {
       const active = this.isActive();
 
       if (!active) {
-        const customEventType = ACTIVATE_CUSTOM_EVENT_TYPE,
-              event = null,
-              element = this,
-              forced = true;
-
         this.addClass("active");
-
-        this.customHandler(customEventType, event, element, forced);
       }
 
       const customEventType = FOCUS_CUSTOM_EVENT_TYPE,
@@ -207,7 +198,7 @@ export default class RichTextarea extends Element {
       return;
     }
 
-    this.focus();
+    this.focus(); ///
   }
 
   deactivate() {
@@ -217,14 +208,7 @@ export default class RichTextarea extends Element {
       return;
     }
 
-    const customEventType = DEACTIVATE_CUSTOM_EVENT_TYPE,
-          event = null,
-          element = this,
-          forced = true;
-
     this.removeClass("active");
-
-    this.customHandler(customEventType, event, element, forced);
   }
 
   getPreviousContent() {
