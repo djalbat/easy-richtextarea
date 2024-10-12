@@ -1,6 +1,6 @@
 "use strict";
 
-import { Element, document, eventTypes } from "easy";
+import { Textarea, document } from "easy";
 
 import Selection from "./selection"
 import customEventMixins from "./mixins/customEvent";
@@ -10,9 +10,7 @@ import { BLUR_CUSTOM_EVENT_TYPE,
          SCROLL_CUSTOM_EVENT_TYPE,
          CHANGE_CUSTOM_EVENT_TYPE } from "./customEventTypes";
 
-const { BLUR_EVENT_TYPE, FOCUS_EVENT_TYPE, INPUT_EVENT_TYPE, SCROLL_EVENT_TYPE } = eventTypes;
-
-export default class RichTextarea extends Element {
+export default class RichTextarea extends Textarea {
   selectionChangeHandler = (event, element) => {
     const active = this.isActive();
 
@@ -255,25 +253,25 @@ export default class RichTextarea extends Element {
 
     this.setPreviousSelection(previousSelection);
 
-    this.onEvent(BLUR_EVENT_TYPE, this.blurHandler);
+    this.onBlur(this.blurHandler);
 
-    this.onEvent(FOCUS_EVENT_TYPE, this.focusHandler);
+    this.onFocus(this.focusHandler);
 
-    this.onEvent(INPUT_EVENT_TYPE, this.inputHandler);
+    this.onInput(this.inputHandler);
 
-    this.onEvent(SCROLL_EVENT_TYPE, this.scrollHandler);
+    this.onScroll(this.scrollHandler);
 
     document.onSelectionChange(this.selectionChangeHandler, this);
   }
 
   willUnmount() {
-    this.offEvent(BLUR_EVENT_TYPE, this.blurHandler);
+    this.offBlur(this.blurHandler);
 
-    this.offEvent(FOCUS_EVENT_TYPE, this.focusHandler);
+    this.offFocus(this.focusHandler);
 
-    this.offEvent(INPUT_EVENT_TYPE, this.inputHandler);
+    this.offInput(this.inputHandler);
 
-    this.offEvent(SCROLL_EVENT_TYPE, this.scrollHandler);
+    this.offScroll(this.scrollHandler);
 
     document.offSelectionChange(this.selectionChangeHandler, this);
   }
@@ -282,17 +280,9 @@ export default class RichTextarea extends Element {
     this.setInitialState();
   }
 
-  static tagName = "textarea";
-
   static defaultProperties = {
     className: "rich"
   };
-
-  static fromClass(Class, properties, ...remainingArguments) {
-    const richTextarea = Element.fromClass(Class, properties, ...remainingArguments);
-
-    return richTextarea;
-  }
 }
 
 Object.assign(RichTextarea.prototype, customEventMixins);
