@@ -1,7 +1,7 @@
 {
   "name": "easy-richtextarea",
   "author": "James Smith",
-  "version": "4.0.335",
+  "version": "4.0.336",
   "license": "MIT, Anti-996",
   "homepage": "https://github.com/djalbat/easy-richtextarea",
   "description": "A textarea element that handles and hands off events well.",
@@ -32,8 +32,7 @@
     "build": "npm run clean && npm run batch",
     "build-debug": "npm run clean && npm run batch-debug",
     "watch": "npm run clean && npm run batch && npm run incremental",
-    "watch-debug": "npm run clean && npm run batch-debug && npm run incremental-debug",
-    "test": "mocha --recursive -R spec ./test"
+    "watch-debug": "npm run clean && npm run batch-debug && npm run incremental-debug"
   },
   "files": [
     "src",
